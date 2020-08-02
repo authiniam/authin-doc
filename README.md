@@ -53,9 +53,9 @@ curl --request POST \
 
 ```json
 {
-	"id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
-	"access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
-	"refresh_token": "fwqxxxxxxxxxxK9s",
+    "id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
+    "access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
+    "refresh_token": "fwqxxxxxxxxxxK9s",
     "token_type": "Bearer",
     "expires_in": 3600
 }
@@ -87,9 +87,9 @@ curl --request POST \
 
 ```json
 {
-	"id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
-	"access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
-	"refresh_token": "fwqxxxxxxxxxxK9s",
+    "id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
+    "access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
+    "refresh_token": "fwqxxxxxxxxxxK9s",
     "token_type": "Bearer",
     "expires_in": 3600
 }
@@ -123,9 +123,9 @@ curl --request POST \
 
 ```json
 {
-	"id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
-	"access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
-	"token_type": "Bearer",
+    "id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
+    "access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
+    "token_type": "Bearer",
     "expires_in": 3600
 }
 ```
@@ -153,7 +153,3 @@ https://<authin_idp_address>/api/v1/keys
     ]
 }
 ```
-<h3 dir="rtl">اصالت سنجی Access Token:</h3>
-
-
-<h3 dir="rtl">اصالت سنجی ID Token:</h3>

@@ -9,7 +9,7 @@
 <ol dir="rtl">
 	<li><code>client_id: </code>شناسه سامانه (RP) تعریف شده در سامانه آتین</li>
 	<li><code>redirect_uri: </code>آدرسی که پس از احراز هویت، کاربر به همراه Authorization Code به این آدرس بازگردانده می‌شود.</li>
-	<li><code>scope: </code>این پاراکتر مجموعه‌ای از رشته‌های جدا شده با کاراکتر فاصله (space) است. جهت استفاده از پروتکل OpenID Connect لازم است مقدار <code>openid</code> در میان این مقادیر وجود داشته باشد. همچنین جهت دسترسی به اطلاعات پایه پروفایل کاربر از UserInfo Endpoint می‌توان مقدار <code>profile</code> را نیز به آن افزود.</li>
+	<li><code>scope: </code>این پارامتر مجموعه‌ای از رشته‌های جدا شده با کاراکتر فاصله (space) است. جهت استفاده از پروتکل OpenID Connect لازم است مقدار <code>openid</code> در میان این مقادیر وجود داشته باشد. همچنین جهت دسترسی به اطلاعات پایه پروفایل کاربر از UserInfo Endpoint می‌توان مقدار <code>profile</code> را نیز به آن افزود.</li>
 	<li><code>response_type: </code> مقدار این پارامتر در این روش باید برابر با <code>code</code> تنظیم شود.</li>
 	<li><code>(اختیاری)state: </code>این رشته توسط سامانه احراز هویت پردازش نشده و عینا به همین شکل در پاسخ به سامانه (RP) بازگردانده می‌شود.</li>
 </ol>
@@ -53,7 +53,7 @@ curl --request POST \
 
 ```json
 {
-    "id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
+	"id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
 	"access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
 	"refresh_token": "fwqxxxxxxxxxxK9s",
     "token_type": "Bearer",
@@ -62,7 +62,7 @@ curl --request POST \
 ```
 
 <h3 dir="rtl">به روز رسانی توکن (Refresh Token):</h3>
-<p dir="rtl">پس  از اتمام فرایند احراز هویت یکی از توکن‌های دریافتی Refresh Token است که سامانه RP با ارائه این توکن به آتین می‌تواند بدون مداخله کاربر توکن جدیدی دریافت کند. مکانیزم درخواست Refresh Token بدین صورت است که در صورتی که عمر توکن فعلی کاربر به اتمام رسیده و توکن منقضی شده باشد،  RP با ارائه Refresh Token دریافتی، توکن جدیدی را به دست می‌آورد. لازم به ذکر است که به هنگام اجرای قرایند خروج از سامانه RP، باید Refresh Token  پاک شود.</p>
+<p dir="rtl">پس  از اتمام فرایند احراز هویت یکی از توکن‌های دریافتی Refresh Token است که سامانه RP با ارائه این توکن به سامانه احراز هویت آتین می‌تواند بدون مداخله کاربر توکن جدیدی دریافت کند. مکانیزم درخواست Refresh Token بدین صورت است که در صورتی که عمر توکن فعلی کاربر به اتمام رسیده و توکن منقضی شده باشد،  RP با ارائه Refresh Token دریافتی، توکن جدیدی را به دست می‌آورد. لازم به ذکر است که به هنگام اجرای قرایند خروج از سامانه RP، باید Refresh Token  پاک شود.</p>
 <p dir="rtl">سامانه RP جهت دریافت توکن جدید باید درخواست Refresh Token را با استفاده از مکانیزم <code>POST</code> و به صورت <code>x-www-form-urlencoded</code> به Token Endpoint سامانه احراز هویت آتین ارائه دهد. پارامترهای این درخواست عبارتند  از:</p>
 <ol dir="rtl">
 	<li><code>client_id: </code>شناسه سامانه (RP) تعریف شده در سامانه آتین</li>
@@ -87,7 +87,7 @@ curl --request POST \
 
 ```json
 {
-    "id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
+	"id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
 	"access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
 	"refresh_token": "fwqxxxxxxxxxxK9s",
     "token_type": "Bearer",
@@ -125,7 +125,7 @@ curl --request POST \
 {
 	"id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
 	"access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
-    "token_type": "Bearer",
+	"token_type": "Bearer",
     "expires_in": 3600
 }
 ```

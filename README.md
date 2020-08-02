@@ -153,3 +153,7 @@ https://<authin_idp_address>/api/v1/keys
     ]
 }
 ```
+<h3 dir="rtl">اصالت سنجی Access Token:</h3>
+
+
+<h3 dir="rtl">اصالت سنجی ID Token:</h3>

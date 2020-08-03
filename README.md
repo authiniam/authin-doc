@@ -9,15 +9,16 @@
 <ol dir="rtl">
 	<li><code>client_id: </code>شناسه سامانه (RP) تعریف شده در سامانه آتین</li>
 	<li><code>redirect_uri: </code>آدرسی که پس از احراز هویت، کاربر به همراه Authorization Code به این آدرس بازگردانده می‌شود.</li>
-	<li><code>scope: </code>این پارامتر مجموعه‌ای از رشته‌های جدا شده با کاراکتر فاصله (space) است. جهت استفاده از پروتکل OpenID Connect لازم است مقدار <code>openid</code> در میان این مقادیر وجود داشته باشد. همچنین جهت دسترسی به اطلاعات پایه پروفایل کاربر از UserInfo Endpoint می‌توان مقدار <code>profile</code> را نیز به آن افزود.</li>
+	<li><code>scope: </code>این پارامتر مجموعه‌ای از رشته‌های جدا شده با کاراکتر فاصله (space) است. جهت استفاده از پروتکل OpenID Connect لازم است مقدار <code>openid</code> در میان این مقادیر وجود داشته باشد. همچنین جهت درخواست دسترسی به اطلاعات پایه پروفایل کاربر از UserInfo Endpoint می‌توان مقدار <code>profile</code> را نیز به آن افزود. در صورتی که مدیریت دسترسی سامانه RP توسط سامانه احراز هویت آتین انجام شود می‌توان لیست دسترسی‌های مورد نظر را نیز به این پارامتر افزود. هنمچنین در صورتی که هیچ دسترسی‌ای در این پارامتر درخواست نشود، تمامی دسترسی‌های کاربر در توکن ارائه می‌شود.</li>
 	<li><code>response_type: </code> مقدار این پارامتر در این روش باید برابر با <code>code</code> تنظیم شود.</li>
-	<li><code>(اختیاری)state: </code>این رشته توسط سامانه احراز هویت پردازش نشده و عینا به همین شکل در پاسخ به سامانه (RP) بازگردانده می‌شود.</li>
+	<li><code>(اختیاری)state: </code>این رشته توسط سامانه احراز هویت پردازش نشده و عینا به همین شکل در پاسخ به سامانه RP بازگردانده می‌شود.</li>
+  <li><code>(اختیاری)claims: </code>در این قسمت می‌توانید برای خصیصه‌های پروفایل کاربر که به سامانه RP ارائه شده است درخواست دهید.</li>
 </ol>
 
 **<p dir="rtl">نمونه درخواست:</p>**
 
 ```
-https://<authin_idp_address>/openidauthorize?client_id=YOUR_CLIENT_ID&redirect_uri=https://YOUR_APP/callback&scope=openid profile&response_type=code&state=YOUR_STATE
+https://<authin_idp_address>/openidauthorize?client_id=YOUR_CLIENT_ID&redirect_uri=https://YOUR_APP/callback&scope=openid profile&response_type=code&state=YOUR_STATE&claims={"id_token":{"YOUR_REQUESTED_CLAIM1":null,"YOUR_REQUESTED_CLAIM2":null}}
 ```
 
 **<p dir="rtl">نمونه پاسخ:</p>**
@@ -187,9 +188,72 @@ https://<authin_idp_address>/api/v1/keys
   <li>در صورتی که درخواست claimهای بیشتری را داده‌اید می‌توانید اطمینان حاصل کنید که مقادیر مورد نظر در توکن وجود دارد یا خیر.</li>
 </ol>
 
+**<p dir="rtl">نمونه ID Token:</p>**
+```json
+Header:
+{
+  "typ": "JWT",
+  "alg": "RS256"
+}
+
+Payload:
+{
+  "token_type": "id_token",
+  "iss": "https://<authin_idp_address>",
+  "sub": "YOUR_USER_ID",
+  "aud": "YOUR_CLIENT_ID",
+  "exp": 1596475389,
+  "iat": 1596471789,
+  "typ": "JWT",
+  "YOUR_REQUESTED_CLAIM1": "SOME_VALUE1",
+  "YOUR_REQUESTED_CLAIM2": "SOME_VALUE2"
+}
+```
+
 <h2 dir="rtl">اصالت‌سنجی Access Token:</h2>
 <p dir="rtl">علاوه بر موارد مطرح شده در اصالت‌سنجی توکن لازم است موارد ذیل در رابطه با Access Token بررسی شود:</p>
 <ol dir="rtl">
 	<li>مقدار <code>aud</code> باید به <code>client_id</code> سامانه RP برابر باشد.</li>
   <li>در صورتی که مدیریت دسترسی سامانه RP توسط سامانه احراز هویت آتین انجام می‌شود می‌توانید لیست دسترسی‌های کاربر که با کاراکتر فاصله جدا شده‌اند را در <code>scope</code> مشاهده نمایید.</li>
 </ol>
+
+**<p dir="rtl">نمونه Access Token:</p>**
+```json
+Header:
+{
+  "typ": "JWT",
+  "alg": "RS256"
+}
+
+Payload:
+{
+  "token_type": "access_token",
+  "iss": "https://<authin_idp_address>",
+  "sub": "YOUR_USER_ID",
+  "aud": "YOUR_CLIENT_ID",
+  "exp": 1596475389,
+  "iat": 1596471789,
+  "scope": "profile",
+  "typ": "JWT"
+}
+```
+
+<h2 dir="rtl">درخواست UserInfo:</h2>
+<p dir="rtl">پس از دریافت Access Token از سامانه احراز هویت آتین می‌توان درخواست اطلاعات پروفایل کاربر را به UserInfo Endpoint ارائه کرد. </p>
+
+**<p dir="rtl">نمونه درخواست:</p>**
+```
+curl -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
+https://<authin_idp_address>/api/v1/oauth/userinfo
+```
+
+**<p dir="rtl">نمونه پاسخ:</p>**
+```json
+{
+    "sub": "YOUR_USER_ID",
+    "name": "YOUR_FULL_NAME",
+    "preferred_name": "YOUR_PREFERRED_USERNAME",
+    "given_name": "YOUR_GIVEN_NAME",
+    "family_name": "YOUR_FAMILY_NAME"
+}
+```

@@ -159,7 +159,7 @@ curl --request POST \
 	<li><code>post_logout_redirect_uri(اختیاری):</code> آدرس صفحه‌ای در سامانه RP که پس از اتمام فرایند خروج کاربر به آن صفحه هدایت می ‌شود. لازم است این آدرس در سامانه آتین تعریف شده باشد.</li>
 	<li><code>state(اختیاری):</code> در صورت استفاده از <code>post_logout_redirect_uri</code> این مقدار عینا در پاسخ به RP بازمی‌گردد.</li>
 </ol>
-<blockquote dir="rtl"><code>توجه:</code> در صورت عدم ارائه <code>id_token_hint</code> در درخواست ارسالی، پس از اتمام فرایند خروج مرکزی در سامانه آتین، کاربر به آدرس <code>post_logout_redirect_uri</code> هدایت نخواهد شد.</blockquote>
+<blockquote dir="rtl"><strong>توجه:</strong> در صورت عدم ارائه <code>id_token_hint</code> در درخواست ارسالی، پس از اتمام فرایند خروج مرکزی در سامانه آتین، کاربر به آدرس <code>post_logout_redirect_uri</code> هدایت نخواهد شد.</blockquote>
 
 **<p dir="rtl">نمونه درخواست:</p>**
 

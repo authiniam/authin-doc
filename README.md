@@ -39,7 +39,7 @@ https://YOUR_APP/callback?code=YOUR_AUTHORIZATION_CODE&state=YOUR_STATE
 
 **<p dir="rtl">نمونه درخواست:</p>**
 
-```
+```bash
 curl --request POST \
   --url 'https://<authin_idp_address>/api/v1/oauth/token' \
   --header 'content-type: application/x-www-form-urlencoded' \
@@ -74,7 +74,7 @@ curl --request POST \
 
 **<p dir="rtl">نمونه درخواست:</p>**
 
-```
+```bash
 curl --request POST \
   --url 'https://<authin_idp_address>/api/v1/oauth/token' \
   --header 'content-type: application/x-www-form-urlencoded' \
@@ -109,7 +109,7 @@ curl --request POST \
 
 **<p dir="rtl">نمونه درخواست:</p>**
 
-```
+```bash
 curl --request POST \
   --url 'https://<authin_idp_address>/api/v1/oauth/token' \
   --header 'content-type: application/x-www-form-urlencoded' \
@@ -129,6 +129,48 @@ curl --request POST \
     "token_type": "Bearer",
     "expires_in": 3600
 }
+```
+
+<h2 dir="rtl">Backchannel Logout:</h2>
+<p dir="rtl">در این روش با هدف اتصال به سامانه خروج مرکزی، RP باید آدرس سرویس خروج خود را در سامانه آتین ثبت نماید. به هنگام خروج کاربر از سامانه آتین <code>Logout Token</code> به این آدرس به صورت <code>POST</code> و با فرمت <code>x-www-form-urlencoded</code> ارسال می‌شود و RP پس از اصالت سنجی توکن دریافتی اقدام به اجرای فرایند خروج کاربر و ابطال نشست مربوطه می‌نماید. لازم است RP پس از اجرای فرایند خروج کاربر یکی از پاسخ‌های HTTP زیر را به آتین برگرداند:</p>
+
+<ol dir="rtl">
+	<li><code>OK(200):</code> در صورتی که خروج با موفقیت انجام شود.</li>
+	<li><code>Bad Request(400):</code>  در صورت وجود اشکال در درخواست دریافت‌شده یا اصالت سنجی توکن این پاسخ ارسال می‌شود.</li>
+	<li><code>Not Implemented(501):</code> در صورتی که پس از اطمینان از صحت درخواست دریافتی، در حین اجرای عملیات خروج توسط RP، خطایی رخ دهد این پاسخ ارسال می‌شود.</li>
+</ol>
+
+**<p dir="rtl">نمونه درخواست ارسال‌شده به RP:</p>**
+
+```bash
+curl --request POST \
+  --url '<backchannel_logout_uri>' \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data 'logout_token="eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxb1E"'
+```
+
+<h2 dir="rtl">Frontchannel Logout:</h2>
+<p dir="rtl">در این روش سامانه RP  ابتدا آدرس صفحه خروج خود را در سامانه آتین ثبت می‌کند. سپس به هنگام خروج کاربر از سامانه احراز هویت مرکزی آتین، این صفحه در قالب یک <code>iframe</code> در صفحه خروج سامانه آتین بارگذاری می‌شود. لازم است به هنگام بارگذاری این صفحه، سامانه RP اقدام به ابطال نشست کاربر نماید.
+
+<h2 dir="rtl">RP-Initiated Logout:</h2>
+<p dir="rtl">در صورتی که کاربر ابتدا از سامانه RP خارج شود، لازم است سامانه RP پس از اجرای فرایند خروج، کاربر را به آدرس صفحه خروج سامانه آتین هدایت کرده تا فرایند خروج متمرکز اجرا شود. این درخواست شامل پارامترهای زیر است:</p>
+<ol dir="rtl">
+	<li><code>id_token_hint(اختیاری):</code> یکی از <code>ID Token</code>های دریافتی از سامانه آتین مرتبط با نشست فعلی کاربر</li>
+	<li><code>post_logout_redirect_uri(اختیاری):</code> آدرس صفحه‌ای در سامانه RP که پس از اتمام فرایند خروج کاربر به آن صفحه هدایت می ‌شود. لازم است این آدرس در سامانه آتین تعریف شده باشد.</li>
+	<li><code>state(اختیاری):</code> در صورت استفاده از <code>post_logout_redirect_uri</code> این مقدار عینا در پاسخ به RP بازمی‌گردد.</li>
+</ol>
+<blockquote dir="rtl"><code>توجه:</code> در صورت عدم ارائه <code>id_token_hint</code> در درخواست ارسالی، پس از اتمام فرایند خروج مرکزی در سامانه آتین، کاربر به آدرس <code>post_logout_redirect_uri</code> هدایت نخواهد شد.</blockquote>
+
+**<p dir="rtl">نمونه درخواست:</p>**
+
+```
+https://<authin_idp_address>/logout?id_token_hint=YOUR_ID_TOKEN&post_logout_redirect_uri=YOUR_POST_LOGOUT_REDIRECT_URI&state=YOUR_STATE
+```
+
+**<p dir="rtl">نمونه پاسخ:</p>**
+
+```
+post_logout_redirect_uri?state=YOUR_STATE
 ```
 
 <h2 dir="rtl">اصالت‌سنجی توکن:</h2>
@@ -238,11 +280,44 @@ Payload:
 }
 ```
 
+<h2 dir="rtl">اصالت‌سنجی Logout Token:</h2>
+<p dir="rtl">پس از خروج کاربر از سامانه احراز هویت مرکزی آتین در صورتی که سامانه RP به راهکار <code>Backchannel Logout</code> متصل باشد، <code>Logout Token</code> مربوط به خروج کاربر را دریافت و فرایند خروج کاربر را اجرا می کند. در این راستا لازم است ابتدا توکن دریافتی اصالت سنجی شود:</p>
+<ol dir="rtl">
+  <li>ابتدا امضای دیجیتال توکن را به روش مشابهی با <code>ID Token</code> اصالت‌سنجی نمایید.</li>
+  <li>مقادیر <code>aud</code> ، <code>iss</code> و <code>exp</code> را به طور مشابهی با <code>ID Token</code> صحت‌سنجی کنید.</li>
+  <li>اطمینان یابید که حداقل یکی از موارد <code>sub</code> یا <code>sid</code> در توکن موجود باشد.</li>
+  <li>مقدار <code>events</code> باید شامل یک مقدار <code>JSON</code> با کلید <code>http://schemas.openid.net/event/backchannel-logout</code> باشد.</li>
+	<li>اطمینان یابید که توکن شامل <code>nonce</code> نباشد.</li>
+</ol>
+
+**<p dir="rtl">نمونه Logout Token:</p>**
+```json
+Header:
+{
+  "typ": "JWT",
+  "alg": "RS256"
+}
+
+Payload:
+{
+  "token_type": "logout_token",
+  "iss": "https://<authin_idp_address>",
+  "sub": "YOUR_USER_ID",
+  "sid": "YOUR_SESSION_ID",
+  "aud": "YOUR_CLIENT_ID",
+  "exp": 1596475389,
+  "iat": 1596471789,
+  "jti": "token_id",
+  "events": {"http://schemas.openid.net/event/backchannel-logout": {}},
+  "typ": "JWT"
+}
+```
+
 <h2 dir="rtl">درخواست UserInfo:</h2>
 <p dir="rtl">پس از دریافت <code>Access Token</code> از سامانه احراز هویت آتین می‌توان درخواست اطلاعات پروفایل کاربر را به <code>UserInfo Endpoint</code> ارائه کرد. </p>
 
 **<p dir="rtl">نمونه درخواست:</p>**
-```
+```bash
 curl -H "Authorization: Bearer <YOUR_ACCESS_TOKEN>" \
 https://<authin_idp_address>/api/v1/oauth/userinfo
 ```

@@ -281,9 +281,9 @@ Payload:
 ```
 
 <h2 dir="rtl">اصالت‌سنجی Logout Token:</h2>
-<p dir="rtl">پس از خروج کاربر از سامانه احراز هویت مرکزی آتین در صورتی که سامانه RP به راهکار <code>Backchannel Logout</code> متصل باشد، <code>Logout Token</code> مربوط به خروج کاربر را دریافت و فرایند خروج کاربر را اجرا می کند. در این راستا لازم است ابتدا توکن دریافتی اصالت سنجی شود:</p>
+<p dir="rtl">پس از خروج کاربر از سامانه احراز هویت مرکزی آتین، در صورتی که سامانه RP به راهکار <code>Backchannel Logout</code> متصل باشد، <code>Logout Token</code> مربوطه را دریافت و فرایند خروج کاربر را اجرا می کند. در این راستا لازم است ابتدا توکن دریافتی اصالت سنجی شود:</p>
 <ol dir="rtl">
-  <li>ابتدا امضای دیجیتال توکن را به روش مشابهی با <code>ID Token</code> اصالت‌سنجی نمایید.</li>
+  <li>امضای دیجیتال توکن را به روش مشابهی با <code>ID Token</code> اصالت‌سنجی نمایید.</li>
   <li>مقادیر <code>aud</code> ، <code>iss</code> و <code>exp</code> را به طور مشابهی با <code>ID Token</code> صحت‌سنجی کنید.</li>
   <li>اطمینان یابید که حداقل یکی از موارد <code>sub</code> یا <code>sid</code> در توکن موجود باشد.</li>
   <li>مقدار <code>events</code> باید شامل یک مقدار <code>JSON</code> با کلید <code>http://schemas.openid.net/event/backchannel-logout</code> باشد.</li>
@@ -307,7 +307,7 @@ Payload:
   "aud": "YOUR_CLIENT_ID",
   "exp": 1596475389,
   "iat": 1596471789,
-  "jti": "token_id",
+  "jti": "TOKEN_ID",
   "events": {"http://schemas.openid.net/event/backchannel-logout": {}},
   "typ": "JWT"
 }

@@ -62,6 +62,76 @@ curl --request POST \
 }
 ```
 
+<h2 dir="rtl">PKCE Flow:</h2>
+<p dir="rtl">این روش احراز هویت برای استفاده در سامانه‌هایی که بر روی سیستم عامل کاربر اجرا می‌شوند (مانند برنامه‌های دسکتاپ و موبایل) طراحی شده است. فرایند احراز هویت در این روش از دو مرحله دریافت کد موقت (<code>Authorization Code</code>) در تعامل با کاربر و دریافت توکن توسط سرور تشکیل شده است.</p>
+<p dir="rtl">در این روش احراز هویت لازم است به ازای هر درخواست احراز هویت دو مقدار <code>code_verifier</code> و <code>code_challenge</code> به شرح زیر ایجاد گردد:</p>
+<ol dir="rtl">
+  <li><code>code_verifier:</code> یک مقدار تصادفی به طول حداقل 43 و حداکثر 128 کاراکتر و متشکل از حروف کوچک، حروف بزرگ، "-"، "_"، "." و "~".</li>
+  <li><code>code_challenge:</code> مقدار درهمسازی شده به دست آمده از <code>code_verifier</code> با استفاده از فرمول <code>BASE64URL-ENCODE(SHA256(ASCII(code_verifier)))</code>.</li>
+</ol>
+
+<h3 dir="rtl">مرحله اول:</h3>
+<p dir="rtl">در این مرحله سامانه RP (سامانه سرویس‌گیرنده) کاربر را جهت احراز هویت و دریافت <code>Authorization Code</code> به آدرس <code>Authorization Endpoint</code> به همراه پارامترهای زیر هدایت می‌کند.</p>
+<ol dir="rtl">
+	<li><code>client_id:</code> شناسه سامانه RP تعریف شده در سامانه آتین</li>
+	<li><code>redirect_uri:</code> آدرسی که پس از احراز هویت، کاربر به همراه <code>Authorization Code</code> به این آدرس بازگردانده می‌شود.</li>
+	<li><code>scope:</code> این پارامتر مجموعه‌ای از رشته‌های جدا شده با کاراکتر فاصله (space)  و در فرمت <code>UrlEncoded</code> است. جهت استفاده از پروتکل OpenID Connect لازم است مقدار <code>openid</code> در میان این مقادیر وجود داشته باشد. همچنین جهت درخواست دسترسی به اطلاعات پایه پروفایل کاربر از <code>UserInfo Endpoint</code> می‌توان مقدار <code>profile</code> را نیز به آن افزود. در صورتی که مدیریت دسترسی سامانه RP توسط سامانه احراز هویت آتین انجام شود می‌توان لیست دسترسی‌های مورد نظر را نیز به این پارامتر افزود. همچنین در صورتی که هیچ دسترسی‌ای در این پارامتر درخواست نشود، تمامی دسترسی‌های کاربر در توکن ارائه می‌شود.</li>
+	<li><code>response_type:</code>  مقدار این پارامتر در این روش باید برابر با <code>code</code> قرار داده شود.</li>
+	<li><code>state(اختیاری):</code> این رشته توسط سامانه احراز هویت پردازش نشده و عینا به همین شکل در پاسخ به سامانه RP بازگردانده می‌شود.</li>
+  <li><code>claims(اختیاری):</code> در این قسمت می‌توانید برای خصیصه‌های پروفایل کاربر که به سامانه RP ارائه شده است درخواست دهید. این پارامتر به صورت <code>UrlEncoded</code> است.</li>
+  <li><code>code_challenge:</code> مقدار <code>code_challenge</code> تولید شده برای این درخواست.</li>
+  <li><code>code_challenge_method:</code> مقدار این پارامتر را معادل <code>S256</code> قرار دهید.</li>
+</ol>
+
+**<p dir="rtl">نمونه درخواست:</p>**
+
+```
+https://<authin_idp_address>/openidauthorize?client_id=YOUR_CLIENT_ID&redirect_uri=https://YOUR_APP/callback&scope=openid profile&response_type=code&state=YOUR_STATE&code_challenge=SOME_CODE_CHALLENGE&code_challenge_method=S256&claims={"id_token":{"YOUR_REQUESTED_CLAIM1":null,"YOUR_REQUESTED_CLAIM2":null}}
+```
+
+**<p dir="rtl">نمونه پاسخ:</p>**
+
+```
+https://YOUR_APP/callback?code=YOUR_AUTHORIZATION_CODE&state=YOUR_STATE
+```
+
+<h3 dir="rtl">مرحله دوم:</h3>
+<p dir="rtl">در این مرحله سامانه RP با استفاده از مقدار <code>Authorization Code</code> دریافتی در مرحله اول اقدام به ارسال درخواست توکن با استفاده از مکانیزم <code>POST</code> و به صورت <code>x-www-form-urlencoded</code> به <code>Token Endpoint</code> سامانه احراز هویت آتین می‌نماید. پارامترهای لازم در این مرحله عبارتند از:</p>
+<ol dir="rtl">
+	<li><code>client_id:</code> شناسه سامانه RP تعریف شده در سامانه آتین</li>
+	<li><code>client_secret:</code> گذرواژه سامانه RP تعریف شده در سامانه آتین</li>
+	<li><code>grant_type:</code> این مقدار باید برابر با <code>authorization_code</code> باشد.</li>
+	<li><code>code:</code> مقدار <code>Authorization Code</code> دریافتی در مرحله اول</li>
+	<li><code>redirect_uri:</code> این مقدار باید عینا با مقدار ارائه شده در مرحله اول یکسان باشد.</li>
+  <li><code>code_verifier:</code> مقدار <code>code_verifier</code> تولید شده برای این درخواست.</li>
+</ol>
+
+**<p dir="rtl">نمونه درخواست:</p>**
+
+```bash
+curl --request POST \
+  --url 'https://<authin_idp_address>/api/v1/oauth/token' \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data client_id=YOUR_CLIENT_ID \
+  --data client_secret=YOUR_CLIENT_SECRET \
+  --data grant_type=authorization_code \
+  --data code=YOUR_AUTHORIZATION_CODE \
+  --data redirect_uri=https://YOUR_APP/callback \
+  --data code_verifier=SOME_CODE_VERIFIER
+```
+
+**<p dir="rtl">نمونه پاسخ:</p>**
+
+```json
+{
+    "id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
+    "access_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxCJ9.glhxxxxxxxxxxzlI",
+    "refresh_token": "fwqxxxxxxxxxxK9s",
+    "token_type": "Bearer",
+    "expires_in": 3600
+}
+```
+
 <h3 dir="rtl">به روز رسانی توکن (Refresh Token):</h3>
 <p dir="rtl">پس  از اتمام فرایند احراز هویت یکی از توکن‌های دریافتی <code>Refresh Token</code> است که سامانه RP با ارائه این توکن به سامانه احراز هویت آتین می‌تواند بدون مداخله کاربر توکن جدیدی دریافت کند. مکانیزم درخواست <code>Refresh Token</code> بدین صورت است که در صورتی که عمر توکن فعلی کاربر به اتمام رسیده و توکن منقضی شده باشد،  سامانه RP با ارائه <code>Refresh Token</code> دریافتی، توکن جدیدی را به دست می‌آورد. لازم به ذکر است که به هنگام اجرای قرایند خروج از سامانه RP، باید <code>Refresh Token</code>  پاک شود.</p>
 <p dir="rtl">سامانه RP جهت دریافت توکن جدید باید درخواست <code>Refresh Token</code> را با استفاده از مکانیزم <code>POST</code> و به صورت <code>x-www-form-urlencoded</code> به <code>Token Endpoint</code> سامانه احراز هویت آتین ارائه دهد. پارامترهای این درخواست عبارتند  از:</p>

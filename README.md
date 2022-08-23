@@ -230,6 +230,7 @@ curl --request POST \
 	<li><code>state(اختیاری):</code> در صورت استفاده از <code>post_logout_redirect_uri</code> این مقدار عینا در پاسخ به RP بازمی‌گردد.</li>
 </ol>
 <blockquote dir="rtl"><strong>توجه:</strong> در صورت عدم ارائه <code>id_token_hint</code> در درخواست ارسالی، پس از اتمام فرایند خروج مرکزی در سامانه آتین، کاربر به آدرس <code>post_logout_redirect_uri</code> هدایت نخواهد شد.</blockquote>
+<blockquote dir="rtl"><strong>توجه:</strong> پارامتر <code>post_logout_redirect_uri</code> باید به صورت <code>UrlEncoded</code> ارسال شود.</blockquote>
 
 **<p dir="rtl">نمونه درخواست:</p>**
 

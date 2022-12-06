@@ -6,7 +6,8 @@
 <ul dir="rtl">
   <li><a href="#authorization_code_flow">Authorization Code Flow</a></li>
   <li><a href="#pkce_flow">PKCE Flow</a></li>
-  <li><a href="#resource_owner_password_flow">Resource Owner Password Flow</a></li>      
+  <li><a href="#resource_owner_password_flow">Resource Owner Password Flow</a></li>
+  <li><a href="#client_credentials_flow">Client Credentials Flow</a></li>        
     <li><a href="#token_validation">اصالت‌سنجی توکن (Token Validation)</a>
         <ul>
             <li><a href="#token_structure_validation">اصالت‌سنجی ساختار</a></li>
@@ -198,6 +199,40 @@ curl --request POST \
 ```
 </br>
 
+<h2 id="client_credentials_flow" dir="rtl">Client Credentials Flow:</h2>
+<p dir="rtl">ار این روش برای برای احراز هویت و دسترسی <code>server-to-server</code> استفاده ‌می‌شود. در فرآیند این سناریوی احراز هویت، کاربری وجود ندارد و احراز هویت ماشین در برابر ماشین <code>(M2M)</code> صورت می‌گیرد. در این روش سامانه <code>RP</code>  اقدام به ارسال پارامتر‌های زیر با استفاده از مکانیزم <code>POST</code> و به صورت <code>x-www-form-urlencoded</code> به <code>Token Endpoint</code> سامانه احراز هویت آتین کرده و در پاسخ توکن را دریافت می‌نماید.</p>
+<p dir="rtl">پارامترهای لازم در این روش عبارتند از:</p>
+<ol dir="rtl">
+	<li><code>client_id:</code> شناسه سامانه RP تعریف شده در سامانه آتین</li>
+	<li><code>client_secret:</code> گذرواژه سامانه RP تعریف شده در سامانه آتین</li>
+	<li><code>grant_type:</code> این مقدار باید برابر با <code>client_credentials</code> باشد.</li>
+	<li><code>audience:</code>شناسه <code>(client_id)</code> <code>API</code>ای که <code>RP</code> قصد دریافت توکن برای آن را دارد.</li>
+	<li><code>scope(اختیاری):</code> <code>scope</code>های مورد نیاز که با <code>space</code> از هم جدا شده‌‌اند.</li>
+</ol>
+
+**<p dir="rtl">نمونه درخواست:</p>**
+
+```bash
+curl --request POST \
+  --url 'https://<authin_idp_address>/api/v1/oauth/token' \
+  --header 'content-type: application/x-www-form-urlencoded' \
+  --data 'client_id=YOUR_CLIENT_ID' \
+  --data 'client_secret=YOUR_CLIENT_SECRET' \
+  --data 'grant_type=client_credentials' \
+  --data 'audience=TARGET_API_CLIENT_ID' \
+  --data 'scope=SCOPE_1 SCOPE_2'
+```
+
+**<p dir="rtl">نمونه پاسخ:</p>**
+
+```json
+{
+    "id_token": "eyJxxxxxxxxxxiJ9.eyJxxxxxxxxxxIn0.rNjxxxxxxxxxxbbc",
+    "token_type": "Bearer",
+    "expires_in": 3600
+}
+```
+</br>
 
 <h2 id="token_validation" dir="rtl">اصالت‌سنجی توکن (Token Validation):</h2>
 

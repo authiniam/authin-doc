@@ -402,7 +402,7 @@ https://<authin_idp_address>/api/v1/oauth/userinfo
 {
     "sub": "YOUR_USER_ID",
     "name": "YOUR_FULL_NAME",
-    "preferred_name": "YOUR_PREFERRED_USERNAME",
+    "preferred_username": "YOUR_PREFERRED_USERNAME",
     "given_name": "YOUR_GIVEN_NAME",
     "family_name": "YOUR_FAMILY_NAME"
 }
